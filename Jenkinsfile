@@ -1,31 +1,31 @@
 pipeline {
 
     agent any
-	stages {
-	   stage('Checkout Source') {
-          steps {
+    stages {
+	stage('Checkout Source') {
+           steps {
              git 'https://github.com/PrabhuRaja1010/Docker-Project.git'
           }
 		
-		}
+	}
 		
 		stage('build image') {
 		  steps {
 		     script {
-	            sampleapp = docker.build("prabhuraja/hello:${env.BUILD_ID}")
+	               sampleapp = docker.build("prabhuraja/hello:${env.BUILD_ID}")
 		        }
-			}
+		    }
 		}
         stage("push image") {
            steps {
              script { 
-		      docker.withRegistry(''https://registry.hub.docker.com', 'dockerhub'){
+	         docker.withRegistry(''https://registry.hub.docker.com', 'dockerhub'){
                       myapp.push("latest")
                       myapp.push("${env.BUILD_ID}")
                     }
                 }
-		    }
-		}					
+            }
+	}					
                    			 
 		
 		stage(deploy to cluster') {
@@ -35,7 +35,7 @@ pipeline {
 		
 		        }
 		    }
-        }
+               }
 		
 		}	
 		
