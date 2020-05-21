@@ -1,59 +1,50 @@
 pipeline {
 
-  environment {
-    registry = "10.128.0.5:5000/mgsgoms/flask"
-    registry_mysql = "10.128.0.5:5000/mgsgoms/mysql"
-    dockerImage = ""
-  }
-
-  agent any
-    stages {
-  
-    stage('Checkout Source') {
-      steps {
-        git 'https://github.com/PrabhuRaja1010/Docker-Project.git'
-      }
-    }
-
-    stage('Build image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
-      }
-    }
-
-    stage('Push Image') {
-      steps{
-        script {
-          docker.withRegistry( "" ) {
-            dockerImage.push()
+    agent any
+	stages {
+	   stage('Checkout Source') {
+          steps {
+             git 'https://github.com/PrabhuRaja1010/Docker-Project.git'
           }
+		
+		}
+		
+		stage('build image') {
+		  steps {
+		     script {
+	            sampleapp = docker.build("prabhuraja/hello:${env.BUILD_ID}")
+		        }
+			}
+		}
+        stage("push image") {
+           steps {
+             script { 
+		      docker.withRegistry(''https://registry.hub.docker.com', 'dockerhub'){
+                      myapp.push("latest")
+                      myapp.push("${env.BUILD_ID}")
+                    }
+                }
+		    }
+		}					
+                   			 
+		
+		stage(deploy to cluster') {
+		     steps {
+			 script {
+		            kubernetesDeploy(configs: "frontend.yaml",, kubeconfigId: "mykubeconfig")
+		
+		        }
+		    }
         }
-      }
-    }
-
-    stage('current') {
-      steps{
-        dir("${env.WORKSPACE}/mysql"){
-          sh "pwd"
-          }
-      }
-   }
-   stage('Build mysql image') {
-     steps{
-       sh 'docker build -t "10.128.0.5:5000/mgsgoms/mysql:$BUILD_NUMBER"  "$WORKSPACE"/mysql'
-        sh 'docker push "10.128.0.5:5000/mgsgoms/mysql:$BUILD_NUMBER"'
-        }
-      }
-    stage('Deploy App') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "frontend.yaml", kubeconfigId: "mykubeconfig")
-        }
-      }
-    }
-
-  }
-
-}
+		
+		}	
+		
+	}
+		
+		
+		
+		
+		
+		
+		
+		      
