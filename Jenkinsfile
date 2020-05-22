@@ -26,7 +26,8 @@ pipeline {
                 }
             }
 	}					
-                   			 
+          
+	 /**
 		
 	    stage('deploy to cluster') {
 		     steps {
@@ -36,8 +37,12 @@ pipeline {
 		        }
 		    }
                }
-		
-	       }	
+	       **/
+	    
+	     stage('Deploy to k8s by using kubectl in jenkins') {
+	         sh 'kubectl apply -f frontend.yaml'
+	       }
+	       }
 		
 	  }
 		    
