@@ -1,8 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  app: frontend
+  labels:
+    app: frontend
+    run: frontend
   name: frontend
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -16,12 +19,12 @@ spec:
     containers:
     - image: prabhuraja/hello:${env.BUILD_ID}
       name: frontend
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app: frontend
   name: frontend
   namespace: default
 spec:
