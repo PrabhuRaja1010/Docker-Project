@@ -1,5 +1,5 @@
-apiVersion: v1
-kind: ReplicationController
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
   app: frontend
   name: frontend
@@ -17,4 +17,21 @@ spec:
     - image: prabhuraja/hello:${env.BUILD_ID}
       name: frontend
 
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: default
+spec:
+  ports:
+  - nodePort: 32333
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: frontend
+  sessionAffinity: None
+  type: NodePort
 
