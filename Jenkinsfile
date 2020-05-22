@@ -28,14 +28,14 @@ pipeline {
 	}					
                    			 
 		
-		stage('deploy to cluster') {
-		     steps {
-			 script {
-		            kubernetesDeploy(configs: "frontend.yml" , kubeconfigId: "kube")
-		
+	    stage("deploy to k8s"){
+		    kubernetesDeploy{
+                        configs: "frondend.yaml" ,
+                        kubeconfigId: "kube" ,
+                        enableConfigSubstitution: true
 		        }
 		    }
-               }
+              
 		
 	       }	
 		
