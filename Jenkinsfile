@@ -30,8 +30,8 @@ pipeline {
 		
 	    stage("deploy to k8s"){
 		    kubernetesDeploy{
-                        configs: "frondend.yaml" ,
-                        kubeconfigId: "kube" ,
+                        configs: " frondend.yaml " ,
+                        kubeconfigId: " kube " ,
                         enableConfigSubstitution: true
 		        }
 		    }
