@@ -40,11 +40,13 @@ pipeline {
 	       **/
 	    
 	     stage('Deploy to k8s by using kubectl in jenkins') {
-	         sh 'kubectl apply -f frontend.yaml'
+	        steps { 
+	           sh 'kubectl apply -f frontend.yaml'
 	       }
-	       }
+	     }
+        }
 		
-	  }
+}
 		    
 		
 		
